@@ -1,11 +1,19 @@
 package Modal;
 
 public class Cheese {
+    private int totalCheeseCollected;
     private char cheese;
     private int cheeseLocationRow;
     private int cheeseLocationColumn;
     public Cheese(char cheese) {
         this.cheese = cheese;
+        totalCheeseCollected = 0;
+    }
+    public int getTotalCheeseCollected() {
+        return totalCheeseCollected;
+    }
+    public void addOneToTotalCheeseCollected() {
+        totalCheeseCollected++;
     }
     public char getCheese() {
         return cheese;

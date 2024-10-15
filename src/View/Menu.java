@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Menu {
     List<String> menuArray=new ArrayList<String>();
+
     Scanner scanner=new Scanner(System.in);
    GameController gameController;
 
@@ -19,7 +20,7 @@ public class Menu {
     public void printWelcomeMessage(){
         System.out.println("----------------------------------------\n" +
                 "Welcome to Cat and Mouse Maze Adventure!\n" +
-                "by Gurshan Singh Aulakh and \n" +
+                "by Gurshan Singh Aulakh and Prottoy Zaman\n" +
                 "----------------------------------------");
     }
     public void printDirectionsMenu(){
@@ -47,7 +48,7 @@ public class Menu {
         }
     }
     public void printRecordOfCheeseCollection(){
-      System.out.println("Cheese collected: 0 of 5");
+      System.out.println("Cheese collected: "+gameController.getTotalCheeseCollected()+" of "+gameController.getCheeseCollectionRequirementToWin());
     }
     public char getValidUserInput(){
         System.out.println("Enter your move [WASD]");
@@ -55,7 +56,8 @@ public class Menu {
       while(true){
           if(inputInString.isEmpty()){
               inputInString=scanner.nextLine();
-          } else if (inputInString.charAt(0)=='w'|| inputInString.charAt(0)=='d'|| inputInString.charAt(0)=='a'|| inputInString.charAt(0)=='s') {
+          } else if (inputInString.charAt(0)=='w'|| inputInString.charAt(0)=='d'|| inputInString.charAt(0)=='a'|| inputInString.charAt(0)=='s'
+          || inputInString.charAt(0)=='c') {
               break;
           }else{
               inputInString=scanner.nextLine();
@@ -71,7 +73,7 @@ public class Menu {
           case 'a'->gameController.moveMouseLeft();
           case 's'->gameController.moveMouseDown();
           case 'd'->gameController.moveMouseRight();
-
+          case 'c'-> gameController.changeWinningRequirementToOneCheese();
       }
     }
 
@@ -84,17 +86,28 @@ public class Menu {
           printRecordOfCheeseCollection();
           char input=getValidUserInput();
           handleTurnBasedOnInput(input);
-          gameController.moveAllCatsRandomly();
-          if(gameController.checkIfMouseLocationMatchesCheeseLocation()){
-              printMaze();
-              System.out.println("You WIN");
-              break;
-          }
           if(gameController.checkIfAnyCatLocationMatchesMouseLocation()){
               printMaze();
               System.out.println("You Lose");
-             break;
+              break;
           }
+          gameController.moveAllCatsRandomly();  //if mouse enters the block of cat then mouse loses thats why i put checkIfAnyCatLocationMatchesMouseLocation() first
+          if(gameController.checkIfAnyCatLocationMatchesMouseLocation()){
+              printMaze();
+              System.out.println("You Lose");
+              break;
+          }
+          if(gameController.checkIfMouseLocationMatchesCheeseLocation()){
+//              gameController.getRandomCheese();
+              printMaze();
+              gameController.collectCheeseWhenCheeseLocationMatchesMouse();
+              if(gameController.getTotalCheeseCollected()==gameController.getCheeseCollectionRequirementToWin()) {
+                  System.out.println("You WIN");
+                  break;
+              }
+          }
+
+
       }
     }
 }

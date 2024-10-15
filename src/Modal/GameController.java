@@ -6,6 +6,7 @@ package Modal;
 //}
 
 public class GameController {
+    private int cheeseCollectionRequirementToWin=2;
     char[][]maze;
     Mouse mouse;
     Cat firstCat;
@@ -34,9 +35,11 @@ public class GameController {
         maze[randomValidLocationForCheese[0]][randomValidLocationForCheese[1]] = cheese.getCheese();
     }
     public void resetPreviousCatPositionOfAllCats(){
+
         maze[firstCat.getCatLocationRow()][firstCat.getCatLocationColumn()]=MazeGenerator.PATH;
         maze[secondCat.getCatLocationRow()][secondCat.getCatLocationColumn()]=MazeGenerator.PATH;
         maze[thirdCat.getCatLocationRow()][thirdCat.getCatLocationColumn()]=MazeGenerator.PATH;
+        maze[cheese.getCheeseLocationRow()][cheese.getCheeseLocationColumn()]=cheese.getCheese();
     }
 
     public void moveAllCatsRandomly(){
@@ -120,6 +123,18 @@ public void resetPreviousMousePosition(){
            return false;
        }
     }
+    public int getCheeseCollectionRequirementToWin(){
+        return cheeseCollectionRequirementToWin;
+    }
+   public void changeWinningRequirementToOneCheese(){
+       cheeseCollectionRequirementToWin=1;
+   }
+   public int getTotalCheeseCollected(){
+        return cheese.getTotalCheeseCollected();
+   }
+   public void collectCheeseWhenCheeseLocationMatchesMouse(){
+   cheese.addOneToTotalCheeseCollected();
+   }
     public void buildMaze() {
         mazeGenerator.generateMaze();
         setInitialPositionOfGameComponents();
