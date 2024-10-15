@@ -116,8 +116,9 @@ public void resetPreviousMousePosition(){
        }
        else if(thirdCat.getCatLocationRow()==mouse.getMouseLocationRow() && thirdCat.getCatLocationColumn()==mouse.getMouseLocationColumn()){
            return true;
+       }else{
+           return false;
        }
-       return false;
     }
     public void buildMaze() {
         mazeGenerator.generateMaze();
