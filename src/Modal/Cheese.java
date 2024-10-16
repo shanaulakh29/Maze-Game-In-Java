@@ -41,7 +41,6 @@ public class Cheese {
                 break;
             }
         }
-        setCheeseLocation(row, column);
         return new int[]{row,column};
     }
 
