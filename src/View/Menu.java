@@ -1,5 +1,6 @@
 package View;
 
+import Modal.Cell;
 import Modal.GameController;
 import Modal.MazeGenerator;
 
@@ -7,8 +8,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Menu {
-    List<List<Integer>> alreadyVistedPathAndDisclosedNeighbours = new ArrayList<>();
+    private final char MOVE_UP_CHARACTER = 'w';
+    private final char MOVE_DOWN_CHARACTER = 's';
+    private final char MOVE_LEFT_CHARACTER = 'a';
+    private final char MOVE_RIGHT_CHARACTER = 'd';
+    private final char Maze_Map_CHARACTER = 'm';
+    private final char CHEAT_CODE_CHARACTER = 'c';
+    private final char HELP_CHARACTER = '?';
 
+
+    List<List<Integer>> alreadyVisitedPathAndDisclosedNeighbours = new ArrayList<>();
     Scanner scanner = new Scanner(System.in);
     GameController gameController;
 
@@ -16,14 +25,14 @@ public class Menu {
         this.gameController = gameController;
     }
 
-    public void printWelcomeMessage() {
+    private void printWelcomeMessage() {
         System.out.println("----------------------------------------\n" +
                 "Welcome to Cat and Mouse Maze Adventure!\n" +
                 "by Gurshan Singh Aulakh and Prottoy Zaman\n" +
                 "----------------------------------------");
     }
 
-    public void printDirectionsMenu() {
+    private void printDirectionsMenu() {
         System.out.println("Directions:\n" +
                 "         Find " + gameController.getCheeseCollectionRequirementToWin() + " cheese before a cat eats you!");
         System.out.println("LEGEND:\n" +
@@ -38,11 +47,14 @@ public class Menu {
 
     }
 
-    public void printMazeCellConditionally(int row, int column, char[][] maze) {
-        alreadyVistedPathAndDisclosedNeighbours = gameController.lookForNeighboursAndAllVisitedAndDisclosedNeighbours();
+    //wrote the following method by myself but i was getting duplicates when i printed the maze.
+    //So i got idea from chatgpt that i can use a boolean flag.
+    private void printMazeCellConditionally(int row, int column, char[][] maze) {
+        alreadyVisitedPathAndDisclosedNeighbours =
+                gameController.lookForNeighboursAndAllVisitedAndDisclosedNeighbours();
 //            List<List<Integer>>alreadyVisitedPathWithoutDiplicates=alreadyVistedPathAndDisclosedNeighbours.stream().distinct().collect(Collectors.toList());
         boolean isCurrentIndexPrinted = false;
-        for (List<Integer> alreadyVistedPathAndDisclosedNeighbour : alreadyVistedPathAndDisclosedNeighbours) {
+        for (List<Integer> alreadyVistedPathAndDisclosedNeighbour : alreadyVisitedPathAndDisclosedNeighbours) {
             int visitedOrNeighbourRow = alreadyVistedPathAndDisclosedNeighbour.get(0);
             int visitedOrNeighbourColumn = alreadyVistedPathAndDisclosedNeighbour.get(1);
             if (visitedOrNeighbourRow == row && visitedOrNeighbourColumn == column) {
@@ -52,7 +64,8 @@ public class Menu {
         }
         if (!isCurrentIndexPrinted) {
             if ((row == 0 && column < MazeGenerator.totalColumns) || (row < MazeGenerator.totalRows && column == 0) ||
-                    (row == MazeGenerator.totalRows - 1 && column < MazeGenerator.totalColumns) || (column == MazeGenerator.totalColumns - 1 && row < MazeGenerator.totalRows)) {
+                    (row == MazeGenerator.totalRows - 1 && column < MazeGenerator.totalColumns) ||
+                    (column == MazeGenerator.totalColumns - 1 && row < MazeGenerator.totalRows)) {
                 System.out.print(MazeGenerator.WALL + " ");
             } else if (gameController.showMouseIfCurrentIndexMatchesMouseIndex(row, column)) {
                 System.out.print(gameController.getMouseSymbol() + " ");
@@ -66,9 +79,7 @@ public class Menu {
         }
     }
 
-    //wrote the following method by myself but i was getting duplicates when i printed the maze.
-    //So i got idea from chatgpt that i can use a boolean flag.
-    public void printMazeByOnlyShowingPathsVisited() {
+    private void printMazeByOnlyShowingPathsVisited() {
 
         System.out.println("Maze:");
         char[][] maze = MazeGenerator.getMazeByReference();
@@ -82,7 +93,7 @@ public class Menu {
         printRecordOfCheeseCollection();
     }
 
-    public void printMazeAndShowAllTheComponents() {
+    private void printMazeAndShowAllTheComponents() {
         System.out.println("Maze:");
         char[][] maze = MazeGenerator.getMazeByReference();
         for (int row = 0; row < MazeGenerator.totalRows; row++) {
@@ -95,11 +106,12 @@ public class Menu {
 
     }
 
-    public void printRecordOfCheeseCollection() {
-        System.out.println("Cheese collected: " + gameController.getTotalCheeseCollected() + " of " + gameController.getCheeseCollectionRequirementToWin());
+    private void printRecordOfCheeseCollection() {
+        System.out.println("Cheese collected: " + gameController.getTotalCheeseCollected() + " of "
+                + gameController.getCheeseCollectionRequirementToWin());
     }
 
-    public char getValidUserInput() {
+    private char getValidUserInput() {
         System.out.print("Enter your move [WASD]: ");
         String inputInString = scanner.nextLine();
         inputInString = inputInString.toLowerCase();
@@ -108,8 +120,10 @@ public class Menu {
                 System.out.println("Invalid move. Please enter just A (left), S (down), D (right), or W (up).");
                 System.out.print("Enter your move [WASD]: ");
                 inputInString = scanner.nextLine();
-            } else if (inputInString.charAt(0) == 'w' || inputInString.charAt(0) == 'd' || inputInString.charAt(0) == 'a' || inputInString.charAt(0) == 's'
-                    || inputInString.charAt(0) == 'c' || inputInString.charAt(0) == 'm' || inputInString.charAt(0) == '?') {
+            } else if (inputInString.charAt(0) == MOVE_UP_CHARACTER || inputInString.charAt(0) == MOVE_DOWN_CHARACTER
+                    || inputInString.charAt(0) == MOVE_LEFT_CHARACTER || inputInString.charAt(0) == MOVE_RIGHT_CHARACTER
+                    || inputInString.charAt(0) == CHEAT_CODE_CHARACTER || inputInString.charAt(0) == Maze_Map_CHARACTER
+                    || inputInString.charAt(0) == HELP_CHARACTER) {
                 break;
             } else {
                 System.out.println("Invalid move. Please enter just A (left), S (down), D (right), or W (up).");
@@ -120,34 +134,34 @@ public class Menu {
         return inputInString.charAt(0);
     }
 
-    public boolean isValidNextLocation(int row, int column) {
+    private boolean isValidNextCell(int row, int column) {
         return gameController.checkValidIndex(row, column);
     }
 
-    public int[] getNextMoveLocation(char input) {
+    private Cell getNextMoveLocation(char input) {
         return switch (input) {
-            case 'w' -> gameController.getNewLocationToMoveMouseUp();
-            case 'a' -> gameController.getNextLocationToMoveMouseLeft();
-            case 's' -> gameController.getNextLocationToMoveMouseDown();
-            case 'd' -> gameController.getNextLocationToMoveMouseRight();
+            case MOVE_UP_CHARACTER -> gameController.getNewLocationToMoveMouseUp();
+            case MOVE_LEFT_CHARACTER -> gameController.getNextLocationToMoveMouseLeft();
+            case MOVE_DOWN_CHARACTER -> gameController.getNextLocationToMoveMouseDown();
+            case MOVE_RIGHT_CHARACTER -> gameController.getNextLocationToMoveMouseRight();
             default -> null;
         };
     }
 
-    public char handleTurnBasedOnInput(char input) {
+    private char handleTurnBasedOnInput(char input) {
         boolean didMouseTakeItsValidTurn = false;
 
         while (!didMouseTakeItsValidTurn) {
-            int[] nextMoveLocation = getNextMoveLocation(input);
+            Cell nextMoveCell = getNextMoveLocation(input);
 
-            if (nextMoveLocation == null || !(isValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
+            if (nextMoveCell == null || !(isValidNextCell(nextMoveCell.getRow(), nextMoveCell.getColumn()))) {
                 System.out.println("Invalid move: you cannot move through walls!");
                 input = getValidUserInput();
-                if (input == 'm' || input == 'c' || input == '?') {
+                if (input == Maze_Map_CHARACTER || input == CHEAT_CODE_CHARACTER || input == HELP_CHARACTER) {
                     return input;
                 }
             } else {
-                gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
+                gameController.moveMouseAsPerUserInput(nextMoveCell.getRow(), nextMoveCell.getColumn());
                 didMouseTakeItsValidTurn = true;
             }
         }
@@ -155,15 +169,15 @@ public class Menu {
     }
 
 
-    public char handleInputsThatAreNotRelatedToTurn(char input) {
+    private char handleInputsThatAreNotRelatedToTurn(char input) {
         while (true) {
-            if (input == '?') {
+            if (input == HELP_CHARACTER) {
                 printDirectionsMenu();
                 input = getValidUserInput();
-            } else if (input == 'm') {
+            } else if (input == Maze_Map_CHARACTER) {
                 printMazeAndShowAllTheComponents();
                 input = getValidUserInput();
-            } else if (input == 'c') {
+            } else if (input == CHEAT_CODE_CHARACTER) {
                 gameController.changeWinningRequirementToOneCheese();
                 input = getValidUserInput();
             } else {
@@ -172,7 +186,7 @@ public class Menu {
         }
     }
 
-    public void printGameLoseMessageWhenMouseLocationMatchesCatLocation() {
+    private void printGameLoseMessageWhenMouseLocationMatchesCatLocation() {
         gameController.placeXSymbolOverCatWhenAnyCatEatsMouse();
         printMazeByOnlyShowingPathsVisited();
         System.out.println("I'm sorry, you have been eaten!");
@@ -180,16 +194,17 @@ public class Menu {
         System.out.println("GAME OVER; please try again.");
     }
 
-    public void buildMazeAndPrintGreetingAndDirectionsMenu() {
+    private void buildMazeAndPrintGreetingAndDirectionsMenu() {
         printWelcomeMessage();
         printDirectionsMenu();
         gameController.buildMaze();
     }
 
-    public boolean MoveCatsAndCheckIfCatCatchesMouse(boolean isCatCatchesMouse) {
+    private boolean MoveCatsAndCheckIfCatCatchesMouse(boolean isCatCatchesMouse) {
         if (gameController.checkIfAnyCatLocationMatchesMouseLocation()) {
             printGameLoseMessageWhenMouseLocationMatchesCatLocation();
             isCatCatchesMouse = true;
+            return isCatCatchesMouse;
         }
         gameController.moveAllCatsRandomly();
 
@@ -200,7 +215,7 @@ public class Menu {
         return isCatCatchesMouse;
     }
 
-    public boolean checkIfMouseEatRequiredCheese(boolean isMouseEatRequiredCheese) {
+    private boolean checkIfMouseEatRequiredCheese(boolean isMouseEatRequiredCheese) {
         if (gameController.checkIfMouseLocationMatchesCheeseLocation()) {
             gameController.placeMouseOverCheeseWhenMouseEatsCheese();
             gameController.collectCheeseWhenCheeseLocationMatchesMouse();
@@ -208,6 +223,7 @@ public class Menu {
                 System.out.println("Congratulations! You won!");
                 printMazeAndShowAllTheComponents();
                 isMouseEatRequiredCheese = true;
+                return isMouseEatRequiredCheese;
             }
             gameController.placeCheeseRandomly();
         }
@@ -224,7 +240,7 @@ public class Menu {
             input = handleInputsThatAreNotRelatedToTurn(input);
             input = handleTurnBasedOnInput(input);
 
-            if (input != 'm' && input != 'c' && input != '?') {
+            if (input != Maze_Map_CHARACTER && input != CHEAT_CODE_CHARACTER && input != HELP_CHARACTER) {
                 isCatCatchesMouse = MoveCatsAndCheckIfCatCatchesMouse(isCatCatchesMouse);
                 isMouseEatRequiredCheese = checkIfMouseEatRequiredCheese(isMouseEatRequiredCheese);
                 if (isMouseEatRequiredCheese || isCatCatchesMouse) {

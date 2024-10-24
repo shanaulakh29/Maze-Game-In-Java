@@ -26,7 +26,8 @@ public class Cat {
     public boolean isValidIndex(int catLocationRow, int catLocationColumn) {
         char[][] maze = MazeGenerator.getMazeByReference();
         if (catLocationRow <= 0 || catLocationRow >= MazeGenerator.totalRows - 1 || catLocationColumn <= 0 ||
-                catLocationColumn >= MazeGenerator.totalColumns - 1 || maze[catLocationRow][catLocationColumn] == MazeGenerator.WALL) {
+                catLocationColumn >= MazeGenerator.totalColumns - 1 || maze[catLocationRow][catLocationColumn]
+                == MazeGenerator.WALL) {
             return false;
         }
         return true;
@@ -37,7 +38,7 @@ public class Cat {
         this.catLocationColumn = catLocationColumn;
     }
 
-    public int[] getCatNextMove() {
+    public Cell getCatNextMove() {
         int[][] directionsArray = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         int randomValueToSelectIndex = (int) (Math.random() * directionsArray.length);
         int[] anyNeighbour = directionsArray[randomValueToSelectIndex];
@@ -53,7 +54,7 @@ public class Cat {
                 break;
             }
         }
-        return new int[]{updatedRowIndex, updatedColumnIndex};
+        return new Cell(updatedRowIndex,updatedColumnIndex);
 
     }
 }

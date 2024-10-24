@@ -36,23 +36,24 @@ public class Cheese {
         this.cheeseLocationColumn = cheeseLocationColumn;
     }
 
-    public int[] findRandomValidLocationForCheese(Mouse mouse) {
+    public Cell findRandomValidLocationForCheese(Mouse mouse) {
         char[][] maze = MazeGenerator.getMazeByReference();
         int row = (int) (Math.random() * (MazeGenerator.totalRows - 2) + 1);
         int column = (int) (Math.random() * (MazeGenerator.totalColumns - 2) + 1);
 //I added extra checks in the if statement because i do not want the cheese to be placed in the same or next column.
 // Doing this makes a game little complicated.
         while (true) {
-            if (MazeGenerator.WALL == maze[row][column] || (mouse.getMouseLocationRow() == row && mouse.getMouseLocationColumn() == column) ||
-                    mouse.getMouseLocationRow() == row || mouse.getMouseLocationColumn() == column || mouse.getMouseLocationColumn() + 1 == column ||
-                    mouse.getMouseLocationColumn() - 1 == column) {
+            if (MazeGenerator.WALL == maze[row][column] ||
+                    (mouse.getMouseLocationRow() == row && mouse.getMouseLocationColumn() == column) ||
+                    mouse.getMouseLocationRow() == row || mouse.getMouseLocationColumn() == column ||
+                    mouse.getMouseLocationColumn() + 1 == column || mouse.getMouseLocationColumn() - 1 == column) {
                 row = (int) (Math.random() * (MazeGenerator.totalRows - 2) + 1);
                 column = (int) (Math.random() * (MazeGenerator.totalColumns - 2) + 1);
             } else {
                 break;
             }
         }
-        return new int[]{row, column};
+        return new Cell(row,column);
     }
 
 }
