@@ -8,7 +8,7 @@ import java.util.Stack;
 public class MazeGenerator {
     private static char[][] maze;
     private final int[][] DIRECTIONS = {{-2, 0}, {2, 0}, {0, -2}, {0, 2}};
-    private final int Number_OF_RANDOMLY_SELECTED_WALLS_REMOVED=70;
+    private final int Number_OF_RANDOMLY_SELECTED_WALLS_REMOVED=100;
     public static final char WALL = '#';
     public static final char PATH = '.';
     public static int totalRows;
