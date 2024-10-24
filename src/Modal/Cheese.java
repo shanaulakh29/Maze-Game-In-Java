@@ -36,7 +36,7 @@ public class Cheese {
         this.cheeseLocationColumn = cheeseLocationColumn;
     }
 
-    public Cell findRandomValidLocationForCheese(Mouse mouse) {
+    public Cell getRandomValidLocationForCheese(Mouse mouse) {
         char[][] maze = MazeGenerator.getMazeByReference();
         int row = (int) (Math.random() * (MazeGenerator.totalRows - 2) + 1);
         int column = (int) (Math.random() * (MazeGenerator.totalColumns - 2) + 1);
@@ -53,7 +53,7 @@ public class Cheese {
                 break;
             }
         }
-        return new Cell(row,column);
+        return new Cell(row, column);
     }
 
 }

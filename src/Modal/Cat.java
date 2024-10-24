@@ -23,7 +23,7 @@ public class Cat {
         return catLocationColumn;
     }
 
-    public boolean isValidIndex(int catLocationRow, int catLocationColumn) {
+    private boolean isValidIndex(int catLocationRow, int catLocationColumn) {
         char[][] maze = MazeGenerator.getMazeByReference();
         if (catLocationRow <= 0 || catLocationRow >= MazeGenerator.totalRows - 1 || catLocationColumn <= 0 ||
                 catLocationColumn >= MazeGenerator.totalColumns - 1 || maze[catLocationRow][catLocationColumn]
@@ -54,7 +54,7 @@ public class Cat {
                 break;
             }
         }
-        return new Cell(updatedRowIndex,updatedColumnIndex);
+        return new Cell(updatedRowIndex, updatedColumnIndex);
 
     }
 }

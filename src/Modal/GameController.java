@@ -5,15 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GameController {
-    List<List<Integer>> alreadyVisitedPathAndDisclosedNeighbours = new ArrayList<>();
+    private List<List<Integer>> alreadyVisitedPathAndDisclosedNeighbours = new ArrayList<>();
     private int cheeseCollectionRequirementToWin = 5;
-    char[][] maze;
-    Mouse mouse;
-    Cat firstCat;
-    Cat secondCat;
-    Cat thirdCat;
-    Cheese cheese;
-    MazeGenerator mazeGenerator;
+    private char[][] maze;
+    private Mouse mouse;
+    private Cat firstCat;
+    private Cat secondCat;
+    private Cat thirdCat;
+    private Cheese cheese;
+    private MazeGenerator mazeGenerator;
 
     public GameController() {
         mazeGenerator = new MazeGenerator(15, 20);
@@ -39,7 +39,7 @@ public class GameController {
     }
 
     public boolean showMouseIfCurrentIndexMatchesMouseIndex(int row, int column) {
-        return mouse.getMouseLocationRow() == row && mouse.mouseLocationColumn == column;
+        return mouse.getMouseLocationRow() == row && mouse.getMouseLocationColumn() == column;
     }
 
     public boolean showCatsIfCurrentIndexMatchesCatsIndex(int row, int column) {
@@ -57,7 +57,6 @@ public class GameController {
     public boolean showCheeseIfCurrentIndexMatchesCheeseIndex(int row, int column) {
         return cheese.getCheeseLocationRow() == row && cheese.getCheeseLocationColumn() == column;
     }
-
 
 
     public void setInitialPositionOfGameComponentsOnMaze() {
@@ -87,7 +86,7 @@ public class GameController {
 
     public void placeCheeseRandomly() {
 
-        Cell randomlyChoosenCheeseCell = cheese.findRandomValidLocationForCheese(mouse);
+        Cell randomlyChoosenCheeseCell = cheese.getRandomValidLocationForCheese(mouse);
         cheese.setCheeseLocation(randomlyChoosenCheeseCell.getRow(), randomlyChoosenCheeseCell.getColumn());
         maze[randomlyChoosenCheeseCell.getRow()][randomlyChoosenCheeseCell.getColumn()] = cheese.getCheese();
     }
@@ -183,7 +182,7 @@ public class GameController {
         cheese.addOneToTotalCheeseCollected();
     }
 
-    public List<List<Integer>> lookForNeighboursAndAllVisitedAndDisclosedNeighbours() {
+    public List<List<Integer>> lookForCurrentNeighboursAndAllVisitedAndDisclosedNeighbours() {
         int[][] allEightNeighbours = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {1, -1}, {-1, 1}, {1, 1}};
         for (int[] neighbour : allEightNeighbours) {
             int mouseNeighbourRow = mouse.getMouseLocationRow() + neighbour[0];
@@ -204,69 +203,3 @@ public class GameController {
         setInitialPositionOfGameComponentsOnMaze();
     }
 }
-//enum MazeSizes {
-//    TOTALROWS, TOTALCOLUMNS
-//
-//}
-
-//    public boolean isNextMoveAWall(int updatedMouseLocationRow,int updatedMouseLocationColumn){
-//       return maze[updatedMouseLocationRow][updatedMouseLocationColumn]==MazeGenerator.WALL;
-//    }
-
-//  public boolean mouseMoveUp(int updatedMouseLocationRow,int updatedMouseLocationColumn){
-////      int updatedMouseLocationRow= mouse.getMouseLocationRow()-1;
-////      int updatedMouseLocationColumn= mouse.getMouseLocationColumn();
-//      if(checkValidIndex(updatedMouseLocationRow, updatedMouseLocationColumn)){
-//          moveMouseAsPerUserInput(updatedMouseLocationRow,updatedMouseLocationColumn);
-//          return true;
-//      }else{
-//          return false;
-//      }
-//  }
-//  public void moveMouseDown(){
-//      int updatedMouseLocationRow= mouse.getMouseLocationRow()+1;
-//      int updatedMouseLocationColumn= mouse.getMouseLocationColumn();
-//      if(checkValidIndex(updatedMouseLocationRow, updatedMouseLocationColumn)){
-//          resetPreviousMousePosition();
-//          mouse.setMouseLocation(updatedMouseLocationRow,updatedMouseLocationColumn);
-//          maze[mouse.getMouseLocationRow()][mouse.getMouseLocationColumn()] = mouse.getMouse();
-//      }
-//  }
-//  public void moveMouseLeft(){
-//      int updatedMouseLocationRow= mouse.getMouseLocationRow();
-//      int updatedMouseLocationColumn= mouse.getMouseLocationColumn()-1;
-//      if(checkValidIndex(updatedMouseLocationRow, updatedMouseLocationColumn)){
-//          resetPreviousMousePosition();
-//          mouse.setMouseLocation(updatedMouseLocationRow, updatedMouseLocationColumn);
-//          maze[mouse.getMouseLocationRow()][mouse.getMouseLocationColumn()] = mouse.getMouse();
-//      }
-//  }
-//  public void moveMouseRight(){
-//      int updatedMouseLocationRow= mouse.getMouseLocationRow();
-//      int updatedMouseLocationColumn= mouse.getMouseLocationColumn()+1;
-//      if(checkValidIndex(updatedMouseLocationRow, updatedMouseLocationColumn)){
-//          resetPreviousMousePosition();
-//          mouse.setMouseLocation(updatedMouseLocationRow,updatedMouseLocationColumn);
-//          maze[mouse.getMouseLocationRow()][mouse.getMouseLocationColumn()] = mouse.getMouse();
-//      }
-//  }
-
-//    public boolean isMouseNeighbour(int currentRow, int currentColumn) {
-//        int[][] allEightNeighbours = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {1, -1}, {-1, 1}, {1, 1}};
-//        for (int[] neighbour : allEightNeighbours) {
-//            int mouseNeighbourRow = mouse.getMouseLocationRow() + neighbour[0];
-//            int mouseNeighbourColumn = mouse.getMouseLocationColumn() + neighbour[1];
-//            if (currentRow == mouseNeighbourRow && currentColumn == mouseNeighbourColumn) {
-//                alreadyVistedPathAndDisclosedNeighbours.add(Arrays.asList(currentRow,currentColumn));
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//    public void showMouseCheeseAndCatsOnMaze(){
-//        maze[mouse.getMouseLocationRow()][mouse.getMouseLocationColumn()] = mouse.getMouse();
-//        maze[cheese.getCheeseLocationRow()][cheese.getCheeseLocationColumn()] = cheese.getCheese();
-//        maze[firstCat.getCatLocationRow()][firstCat.getCatLocationColumn()] = firstCat.getCat();
-//        maze[secondCat.getCatLocationRow()][secondCat.getCatLocationColumn()] = secondCat.getCat();
-//        maze[thirdCat.getCatLocationRow()][thirdCat.getCatLocationColumn()] = thirdCat.getCat();
-//    }

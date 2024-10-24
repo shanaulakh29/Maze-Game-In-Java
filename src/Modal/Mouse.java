@@ -1,9 +1,9 @@
 package Modal;
 
 public class Mouse {
-    char mouse;
-    int mouseLocationRow;
-    int mouseLocationColumn;
+    private char mouse;
+    private int mouseLocationRow;
+    private int mouseLocationColumn;
 
     public Mouse(char mouse, int mouseLocationRow, int mouseLocationColumn) {
         this.mouse = mouse;

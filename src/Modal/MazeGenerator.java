@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.IntStream;
 
-//Git idea from chatgpt about the mazeGeneration algorithm but implemented by my own.
+//Got idea from chatgpt about the mazeGeneration algorithm but implemented by my own.
 public class MazeGenerator {
     private static char[][] maze;
-    int NUMBER_OF_RANDOMLY_SELECTED_WALLS_REMOVED = 100;
+    private final int NUMBER_OF_RANDOMLY_SELECTED_WALLS_REMOVED = 100;
     private final int[][] DIRECTIONS = {{-2, 0}, {2, 0}, {0, -2}, {0, 2}};
     public static final char WALL = '#';
     public static final char PATH = '.';
@@ -25,12 +26,12 @@ public class MazeGenerator {
         return maze;
     }
 
-   private void fillMazeWithWalls() {
-        for (int i = 0; i < totalRows; i++) {
-            for (int j = 0; j < totalColumns; j++) {
-                maze[i][j] = WALL;
-            }
-        }
+    private void fillMazeWithWalls() {
+
+        IntStream.range(0, totalRows)
+                .forEach(row -> IntStream.range(0, totalColumns)
+                        .forEach(column -> maze[row][column] = WALL));
+
     }
 
     private boolean isValidCell(int row, int column) {
@@ -87,7 +88,7 @@ public class MazeGenerator {
                     break;
                 }
             }
-            removeWallsIfConstraintsMet(randomCell);
+            removeWallIfConstraintsMet(randomCell);
         }
     }
 
@@ -97,7 +98,7 @@ public class MazeGenerator {
         return new Cell(randomRow, randomColumn);
     }
 
-    private void removeWallsIfConstraintsMet(Cell cell) {
+    private void removeWallIfConstraintsMet(Cell cell) {
         int totalUndiscoveredPathsAroundSpecificCell = 0;
         if (maze[cell.getRow() - 1][cell.getColumn()] == PATH) {
             totalUndiscoveredPathsAroundSpecificCell++;
@@ -116,6 +117,7 @@ public class MazeGenerator {
             maze[cell.getRow()][cell.getColumn()] = PATH;
         }
     }
+
     public void generateMaze() {
         fillMazeWithWalls();
         performDepthFirstSearchOnMaze();
