@@ -38,42 +38,44 @@ public class Menu {
 
     }
 
+    public void printMazeCellConditionally(int row, int column, char[][] maze) {
+        alreadyVistedPathAndDisclosedNeighbours = gameController.lookForNeighboursAndAllVisitedAndDisclosedNeighbours();
+//            List<List<Integer>>alreadyVisitedPathWithoutDiplicates=alreadyVistedPathAndDisclosedNeighbours.stream().distinct().collect(Collectors.toList());
+        boolean isCurrentIndexPrinted = false;
+        for (List<Integer> alreadyVistedPathAndDisclosedNeighbour : alreadyVistedPathAndDisclosedNeighbours) {
+            int visitedOrNeighbourRow = alreadyVistedPathAndDisclosedNeighbour.get(0);
+            int visitedOrNeighbourColumn = alreadyVistedPathAndDisclosedNeighbour.get(1);
+            if (visitedOrNeighbourRow == row && visitedOrNeighbourColumn == column) {
+                System.out.print(maze[row][column] == MazeGenerator.PATH ? "  " : maze[row][column] + " ");
+                isCurrentIndexPrinted = true;
+            }
+        }
+        if (!isCurrentIndexPrinted) {
+            if ((row == 0 && column < MazeGenerator.totalColumns) || (row < MazeGenerator.totalRows && column == 0) ||
+                    (row == MazeGenerator.totalRows - 1 && column < MazeGenerator.totalColumns) || (column == MazeGenerator.totalColumns - 1 && row < MazeGenerator.totalRows)) {
+                System.out.print(MazeGenerator.WALL + " ");
+            } else if (gameController.showMouseIfCurrentIndexMatchesMouseIndex(row, column)) {
+                System.out.print(gameController.getMouseSymbol() + " ");
+            } else if (gameController.showCatsIfCurrentIndexMatchesCatsIndex(row, column)) {
+                System.out.print(gameController.getCatsSymbol() + " ");
+            } else if (gameController.showCheeseIfCurrentIndexMatchesCheeseIndex(row, column)) {
+                System.out.print(gameController.getCheeseSymbol() + " ");
+            } else {
+                System.out.print(MazeGenerator.PATH + " ");
+            }
+        }
+    }
+
     //wrote the following method by myself but i was getting duplicates when i printed the maze.
     //So i got idea from chatgpt that i can use a boolean flag.
-    public void printMaze() {
+    public void printMazeByOnlyShowingPathsVisited() {
 
         System.out.println("Maze:");
         char[][] maze = MazeGenerator.getMazeByReference();
 
         for (int row = 0; row < MazeGenerator.totalRows; row++) {
             for (int column = 0; column < MazeGenerator.totalColumns; column++) {
-//                System.out.print(maze[row][column]+" ");
-                alreadyVistedPathAndDisclosedNeighbours = gameController.lookForNeighboursAndAllVisitedAndDisclosedNeighbours();
-//            List<List<Integer>>alreadyVisitedPathWithoutDiplicates=alreadyVistedPathAndDisclosedNeighbours.stream().distinct().collect(Collectors.toList());
-                boolean isCurrentIndexPrinted = false;
-                for (List<Integer> alreadyVistedPathAndDisclosedNeighbour : alreadyVistedPathAndDisclosedNeighbours) {
-                    int visitedOrNeighbourRow = alreadyVistedPathAndDisclosedNeighbour.get(0);
-                    int visitedOrNeighbourColumn = alreadyVistedPathAndDisclosedNeighbour.get(1);
-                    if (visitedOrNeighbourRow == row && visitedOrNeighbourColumn == column) {
-                        System.out.print(maze[row][column] == MazeGenerator.PATH ? "  " : maze[row][column] + " ");
-                        isCurrentIndexPrinted = true;
-                    }
-                }
-
-                if (!isCurrentIndexPrinted) {
-                    if ((row == 0 && column < MazeGenerator.totalColumns) || (row < MazeGenerator.totalRows && column == 0) ||
-                            (row == MazeGenerator.totalRows - 1 && column < MazeGenerator.totalColumns) || (column == MazeGenerator.totalColumns - 1 && row < MazeGenerator.totalRows)) {
-                        System.out.print(MazeGenerator.WALL + " ");
-                    } else if (gameController.showMouseIfCurrentIndexMatchesMouseIndex(row, column)) {
-                        System.out.print(gameController.getMouseSymbol() + " ");
-                    } else if (gameController.showCatsIfCurrentIndexMatchesCatsIndex(row, column)) {
-                        System.out.print(gameController.getCatsSymbol() + " ");
-                    } else if (gameController.showCheeseIfCurrentIndexMatchesCheeseIndex(row, column)) {
-                        System.out.print(gameController.getCheeseSymbol() + " ");
-                    } else {
-                        System.out.print(MazeGenerator.PATH + " ");
-                    }
-                }
+                printMazeCellConditionally(row, column, maze);
             }
             System.out.println();
         }
@@ -118,65 +120,40 @@ public class Menu {
         return inputInString.charAt(0);
     }
 
-    public boolean ifValidNextLocation(int row, int column) {
+    public boolean isValidNextLocation(int row, int column) {
         return gameController.checkValidIndex(row, column);
     }
 
+    public int[] getNextMoveLocation(char input) {
+        return switch (input) {
+            case 'w' -> gameController.getNewLocationToMoveMouseUp();
+            case 'a' -> gameController.getNextLocationToMoveMouseLeft();
+            case 's' -> gameController.getNextLocationToMoveMouseDown();
+            case 'd' -> gameController.getNextLocationToMoveMouseRight();
+            default -> null;
+        };
+    }
+
     public char handleTurnBasedOnInput(char input) {
-        int[] nextMoveLocation = null;
         boolean didMouseTakeItsValidTurn = false;
+
         while (!didMouseTakeItsValidTurn) {
-            switch (input) {
-                case 'w' -> {
-                    nextMoveLocation = gameController.getNewLocationToMoveMouseUp();
-                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
-                        System.out.println("Invalid move: you cannot move through walls!");
-                        input = getValidUserInput();
-                    } else {
+            int[] nextMoveLocation = getNextMoveLocation(input);
 
-                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
-                        didMouseTakeItsValidTurn = true;
-                    }
-                }
-                case 'a' -> {
-                    nextMoveLocation = gameController.getNextLocationToMoveMouseLeft();
-                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
-                        System.out.println("Invalid move: you cannot move through walls!");
-                        input = getValidUserInput();
-                    } else {
-                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
-                        didMouseTakeItsValidTurn = true;
-                    }
-
-                }
-                case 's' -> {
-                    nextMoveLocation = gameController.getNextLocationToMoveMouseDown();
-                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
-                        System.out.println("Invalid move: you cannot move through walls!");
-                        input = getValidUserInput();
-                    } else {
-                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
-                        didMouseTakeItsValidTurn = true;
-                    }
-                }
-                case 'd' -> {
-                    nextMoveLocation = gameController.getNextLocationToMoveMouseRight();
-                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
-                        System.out.println("Invalid move: you cannot move through walls!");
-                        input = getValidUserInput();
-                    } else {
-                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
-                        didMouseTakeItsValidTurn = true;
-                    }
-                }
-                default -> {
+            if (nextMoveLocation == null || !(isValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
+                System.out.println("Invalid move: you cannot move through walls!");
+                input = getValidUserInput();
+                if (input == 'm' || input == 'c' || input == '?') {
                     return input;
                 }
+            } else {
+                gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
+                didMouseTakeItsValidTurn = true;
             }
         }
         return input;
-
     }
+
 
     public char handleInputsThatAreNotRelatedToTurn(char input) {
         while (true) {
@@ -197,44 +174,64 @@ public class Menu {
 
     public void printGameLoseMessageWhenMouseLocationMatchesCatLocation() {
         gameController.placeXSymbolOverCatWhenAnyCatEatsMouse();
-        printMaze();
+        printMazeByOnlyShowingPathsVisited();
         System.out.println("I'm sorry, you have been eaten!");
         printMazeAndShowAllTheComponents();
         System.out.println("GAME OVER; please try again.");
     }
-    public void buildMazeAndPrintGreetingAndDirectionsMenu(){
+
+    public void buildMazeAndPrintGreetingAndDirectionsMenu() {
         printWelcomeMessage();
         printDirectionsMenu();
         gameController.buildMaze();
     }
 
+    public boolean MoveCatsAndCheckIfCatCatchesMouse(boolean isCatCatchesMouse) {
+        if (gameController.checkIfAnyCatLocationMatchesMouseLocation()) {
+            printGameLoseMessageWhenMouseLocationMatchesCatLocation();
+            isCatCatchesMouse = true;
+        }
+        gameController.moveAllCatsRandomly();
+
+        if (gameController.checkIfAnyCatLocationMatchesMouseLocation()) {
+            printGameLoseMessageWhenMouseLocationMatchesCatLocation();
+            isCatCatchesMouse = true;
+        }
+        return isCatCatchesMouse;
+    }
+
+    public boolean checkIfMouseEatRequiredCheese(boolean isMouseEatRequiredCheese) {
+        if (gameController.checkIfMouseLocationMatchesCheeseLocation()) {
+            gameController.placeMouseOverCheeseWhenMouseEatsCheese();
+            gameController.collectCheeseWhenCheeseLocationMatchesMouse();
+            if (gameController.getTotalCheeseCollected() == gameController.getCheeseCollectionRequirementToWin()) {
+                System.out.println("Congratulations! You won!");
+                printMazeAndShowAllTheComponents();
+                isMouseEatRequiredCheese = true;
+            }
+            gameController.placeCheeseRandomly();
+        }
+        return isMouseEatRequiredCheese;
+    }
+
     public void playGame() {
+        boolean isCatCatchesMouse = false;
+        boolean isMouseEatRequiredCheese = false;
         buildMazeAndPrintGreetingAndDirectionsMenu();
+        printMazeByOnlyShowingPathsVisited();
+        char input = getValidUserInput();
         while (true) {
-            printMaze();
-            char input = getValidUserInput();
             input = handleInputsThatAreNotRelatedToTurn(input);
             input = handleTurnBasedOnInput(input);
+
             if (input != 'm' && input != 'c' && input != '?') {
-                if (gameController.checkIfAnyCatLocationMatchesMouseLocation()) {
-                    printGameLoseMessageWhenMouseLocationMatchesCatLocation();
+                isCatCatchesMouse = MoveCatsAndCheckIfCatCatchesMouse(isCatCatchesMouse);
+                isMouseEatRequiredCheese = checkIfMouseEatRequiredCheese(isMouseEatRequiredCheese);
+                if (isMouseEatRequiredCheese || isCatCatchesMouse) {
                     break;
                 }
-                gameController.moveAllCatsRandomly();  //if mouse enters the block of cat then mouse loses that is why i put checkIfAnyCatLocationMatchesMouseLocation() first
-                if (gameController.checkIfAnyCatLocationMatchesMouseLocation()) {
-                    printGameLoseMessageWhenMouseLocationMatchesCatLocation();
-                    break;
-                }
-                if (gameController.checkIfMouseLocationMatchesCheeseLocation()) {
-                    gameController.placeMouseOverCheeseWhenMouseEatsCheese();
-                    gameController.collectCheeseWhenCheeseLocationMatchesMouse();
-                    if (gameController.getTotalCheeseCollected() == gameController.getCheeseCollectionRequirementToWin()) {
-                        System.out.println("Congratulations! You won!");
-                        printMazeAndShowAllTheComponents();
-                        break;
-                    }
-                    gameController.placeCheeseRandomly();
-                }
+                printMazeByOnlyShowingPathsVisited();
+                input = getValidUserInput();
             }
         }
     }
@@ -270,5 +267,63 @@ public class Menu {
 //            System.out.println();
 //        }
 //
+//
+//
+//  }
+
+
+//    public char handleTurnBasedOnInput(char input) {
+//        int[] nextMoveLocation = null;
+//        boolean didMouseTakeItsValidTurn = false;
+//        while (!didMouseTakeItsValidTurn) {
+//            switch (input) {
+//                case 'w' -> {
+//                    nextMoveLocation = gameController.getNewLocationToMoveMouseUp();
+//                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
+//                        System.out.println("Invalid move: you cannot move through walls!");
+//                        input = getValidUserInput();
+//                    } else {
+//
+//                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
+//                        didMouseTakeItsValidTurn = true;
+//                    }
+//                }
+//                case 'a' -> {
+//                    nextMoveLocation = gameController.getNextLocationToMoveMouseLeft();
+//                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
+//                        System.out.println("Invalid move: you cannot move through walls!");
+//                        input = getValidUserInput();
+//                    } else {
+//                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
+//                        didMouseTakeItsValidTurn = true;
+//                    }
+//
+//                }
+//                case 's' -> {
+//                    nextMoveLocation = gameController.getNextLocationToMoveMouseDown();
+//                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
+//                        System.out.println("Invalid move: you cannot move through walls!");
+//                        input = getValidUserInput();
+//                    } else {
+//                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
+//                        didMouseTakeItsValidTurn = true;
+//                    }
+//                }
+//                case 'd' -> {
+//                    nextMoveLocation = gameController.getNextLocationToMoveMouseRight();
+//                    if (!(ifValidNextLocation(nextMoveLocation[0], nextMoveLocation[1]))) {
+//                        System.out.println("Invalid move: you cannot move through walls!");
+//                        input = getValidUserInput();
+//                    } else {
+//                        gameController.moveMouseAsPerUserInput(nextMoveLocation[0], nextMoveLocation[1]);
+//                        didMouseTakeItsValidTurn = true;
+//                    }
+//                }
+//                default -> {
+//                    return input;
+//                }
+//            }
+//        }
+//        return input;
 //
 //    }

@@ -8,7 +8,7 @@ import java.util.Stack;
 public class MazeGenerator {
     private static char[][] maze;
     private final int[][] DIRECTIONS = {{-2, 0}, {2, 0}, {0, -2}, {0, 2}};
-    private final int Number_OF_RANDOMLY_SELECTED_WALLS_REMOVED=100;
+    private final int Number_OF_RANDOMLY_SELECTED_WALLS_REMOVED = 100;
     public static final char WALL = '#';
     public static final char PATH = '.';
     public static int totalRows;
@@ -20,7 +20,7 @@ public class MazeGenerator {
         this.totalColumns = totalColumns;
     }
 
-    public  static char[][] getMazeByReference() {
+    public static char[][] getMazeByReference() {
         return maze;
     }
 
@@ -39,11 +39,11 @@ public class MazeGenerator {
     public void performDepthFirstSearchOnMaze() {
         Stack<Cell> stack = new Stack<>();
         Cell startCell = new Cell(1, 1);
-          maze[startCell.row][startCell.column] = PATH;
+        maze[startCell.row][startCell.column] = PATH;
         stack.push(startCell);
         while (!stack.isEmpty()) {
             Cell currentCell = stack.peek();
-            List<Cell> neighbours=new ArrayList<>();
+            List<Cell> neighbours = new ArrayList<>();
             for (int[] direction : DIRECTIONS) {
                 int newRow = currentCell.row + direction[0];
                 int newColumn = currentCell.column + direction[1];
@@ -52,50 +52,52 @@ public class MazeGenerator {
                     neighbours.add(neighbourCell);
                 }
             }
-            if(!neighbours.isEmpty()){
+            if (!neighbours.isEmpty()) {
                 Collections.shuffle(neighbours);
 //                for(Cell neighbourCell : neighbours){
 //                    stack.push(neighbourCell);
 //                }
-                Cell anyNeighbourCell=neighbours.get(0);
+                Cell anyNeighbourCell = neighbours.get(0);
 //                Cell anyNeighbourCell=neighbours.get((int)(Math.random()*neighbours.size()));
                 stack.push(anyNeighbourCell);
 //                Cell anyNeighbourCell=neighbours.get(neighbours.size()-1);
                 maze[anyNeighbourCell.row][anyNeighbourCell.column] = PATH;
-                removeWallBetweenCells(currentCell,anyNeighbourCell);
-            }else{
+                removeWallBetweenCells(currentCell, anyNeighbourCell);
+            } else {
                 stack.pop();
             }
         }
     }
+
     public void removeWallBetweenCells(Cell currentCell, Cell neighbourCell) {
-        int row=(currentCell.row+neighbourCell.row)/2;
-        int column=(currentCell.column+neighbourCell.column)/2;
+        int row = (currentCell.row + neighbourCell.row) / 2;
+        int column = (currentCell.column + neighbourCell.column) / 2;
         maze[row][column] = PATH;
 
     }
-    public void removeRandomWallsToAddManyPaths(){
 
-        for(int i=0;i<Number_OF_RANDOMLY_SELECTED_WALLS_REMOVED;i++){
-            Cell randomCell= getRandomCellToMakePath();
-            while(true){
+    public void removeRandomWallsToAddManyPaths() {
 
-                int row=randomCell.row;
-                int column=randomCell.column;
-                if(maze[row][column]==PATH){
-                    randomCell=getRandomCellToMakePath();
-                }
-                else{
+        for (int i = 0; i < Number_OF_RANDOMLY_SELECTED_WALLS_REMOVED; i++) {
+            Cell randomCell = getRandomCellToMakePath();
+            while (true) {
+
+                int row = randomCell.row;
+                int column = randomCell.column;
+                if (maze[row][column] == PATH) {
+                    randomCell = getRandomCellToMakePath();
+                } else {
                     break;
                 }
             }
             removeWallsIfConstraintsMet(randomCell);
         }
     }
-    public Cell getRandomCellToMakePath(){
-        int randomRow= ((int)(Math.random() * (totalRows - 2))+1);
-        int randomColumn=((int)(Math.random()*(totalColumns-2))+1);
-        return new Cell(randomRow,randomColumn);
+
+    public Cell getRandomCellToMakePath() {
+        int randomRow = ((int) (Math.random() * (totalRows - 2)) + 1);
+        int randomColumn = ((int) (Math.random() * (totalColumns - 2)) + 1);
+        return new Cell(randomRow, randomColumn);
     }
 
     public void removeWallsIfConstraintsMet(Cell cell) {
@@ -113,13 +115,13 @@ public class MazeGenerator {
             totalUndiscoveredPathsAroundSpecificCell++;
         }
 
-        if(totalUndiscoveredPathsAroundSpecificCell<=1) {
+        if (totalUndiscoveredPathsAroundSpecificCell <= 1) {
             maze[cell.row][cell.column] = PATH;
         }
     }
 
 
-    public void generateMaze(){
+    public void generateMaze() {
         fillMazeWithWalls();
 
         performDepthFirstSearchOnMaze();
