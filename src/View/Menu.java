@@ -33,7 +33,8 @@ public class Menu {
 
     private void printDirectionsMenu() {
         System.out.println("Directions:\n" +
-                "         Find " + gameController.getCheeseCollectionRequirementToWin() + " cheese before a cat eats you!");
+                "         Find " + gameController.getCheeseCollectionRequirementToWin() +
+                " cheese before a cat eats you!");
         System.out.println("LEGEND:\n" +
                 "         #: Wall\n" +
                 "         @: You (a mouse)\n" +
@@ -51,7 +52,6 @@ public class Menu {
     private void printMazeCellConditionally(int row, int column, char[][] maze) {
         alreadyVisitedPathAndDisclosedNeighbours =
                 gameController.lookForCurrentNeighboursAndAllVisitedAndDisclosedNeighbours();
-//            List<List<Integer>>alreadyVisitedPathWithoutDiplicates=alreadyVistedPathAndDisclosedNeighbours.stream().distinct().collect(Collectors.toList());
         boolean isCurrentIndexPrinted = false;
         for (List<Integer> alreadyVistedPathAndDisclosedNeighbour : alreadyVisitedPathAndDisclosedNeighbours) {
             int visitedOrNeighbourRow = alreadyVistedPathAndDisclosedNeighbour.get(0);
