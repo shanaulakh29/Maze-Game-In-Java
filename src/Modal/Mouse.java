@@ -1,5 +1,8 @@
 package Modal;
 
+/**
+ * Mouse class manages the location of mouse and provides methods to access or set the mouse location.
+ */
 public class Mouse {
     private char mouse;
     private int mouseLocationRow;

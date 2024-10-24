@@ -1,5 +1,9 @@
 package Modal;
 
+/**
+ * Cell class stores the location in the form of row and column and provide methods to get row and column.
+ * Cell class doesnot have the setters for row and column as they are not needed.
+ */
 public class Cell {
     private int row;
     private int column;

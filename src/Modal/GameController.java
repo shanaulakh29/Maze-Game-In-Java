@@ -4,6 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The GameController class manages the entire game logic by utilizing the Mouse, Cat, and MazeGenerator classes.
+ * It sets the starting positions of the mouse, cats, and cheese, and manages their movement within the maze.
+ * GameController ensures valid moves for both the mouse and cats by updating their positions and
+ * resetting the previously occupied cells to their original state.
+ * Additionally, it checks for interactions between the mouse, cats and cheese,
+ * tracks the total cheese collected, and determines win or lose conditions based on the game's progress.
+ * The class increments the totalCheeseCollected when the mouse eats cheese and includes functionality for cheat codes,
+ * allowing players to win more easily.
+ * It also tracks the mouse’s visited paths and neighboring cells during each move.
+ */
 public class GameController {
     private List<List<Integer>> alreadyVisitedPathAndDisclosedNeighbours = new ArrayList<>();
     private int cheeseCollectionRequirementToWin = 5;
@@ -38,11 +49,11 @@ public class GameController {
         return cheese.getCheese();
     }
 
-    public boolean showMouseIfCurrentIndexMatchesMouseIndex(int row, int column) {
+    public boolean displayMouseIfCurrentIndexMatchesMouseIndex(int row, int column) {
         return mouse.getMouseLocationRow() == row && mouse.getMouseLocationColumn() == column;
     }
 
-    public boolean showCatsIfCurrentIndexMatchesCatsIndex(int row, int column) {
+    public boolean displayCatsIfCurrentIndexMatchesCatsIndex(int row, int column) {
         if (firstCat.getCatLocationRow() == row && firstCat.getCatLocationColumn() == column) {
             return true;
         } else if (secondCat.getCatLocationRow() == row && secondCat.getCatLocationColumn() == column) {
@@ -54,7 +65,7 @@ public class GameController {
         }
     }
 
-    public boolean showCheeseIfCurrentIndexMatchesCheeseIndex(int row, int column) {
+    public boolean displayCheeseIfCurrentIndexMatchesCheeseIndex(int row, int column) {
         return cheese.getCheeseLocationRow() == row && cheese.getCheeseLocationColumn() == column;
     }
 

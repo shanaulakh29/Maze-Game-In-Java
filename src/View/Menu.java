@@ -8,6 +8,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Menu class displays the directions to interact with the maze game. Menu class is responsible for getting input
+ * from the user and ensuring that the input is valid so that the GameController class can process that input
+ * This class uses the code written inside the GameController class to actually do the checks for if mouse location
+ * matches with the cheese or mouse location matches with cat. This class also print the win or lose message based
+ * on the game state.
+ */
 public class Menu {
     private final char MOVE_UP_CHARACTER = 'w';
     private final char MOVE_DOWN_CHARACTER = 's';
@@ -66,11 +73,11 @@ public class Menu {
                     (row == MazeGenerator.totalRows - 1 && column < MazeGenerator.totalColumns) ||
                     (column == MazeGenerator.totalColumns - 1 && row < MazeGenerator.totalRows)) {
                 System.out.print(MazeGenerator.WALL + " ");
-            } else if (gameController.showMouseIfCurrentIndexMatchesMouseIndex(row, column)) {
+            } else if (gameController.displayMouseIfCurrentIndexMatchesMouseIndex(row, column)) {
                 System.out.print(gameController.getMouseSymbol() + " ");
-            } else if (gameController.showCatsIfCurrentIndexMatchesCatsIndex(row, column)) {
+            } else if (gameController.displayCatsIfCurrentIndexMatchesCatsIndex(row, column)) {
                 System.out.print(gameController.getCatsSymbol() + " ");
-            } else if (gameController.showCheeseIfCurrentIndexMatchesCheeseIndex(row, column)) {
+            } else if (gameController.displayCheeseIfCurrentIndexMatchesCheeseIndex(row, column)) {
                 System.out.print(gameController.getCheeseSymbol() + " ");
             } else {
                 System.out.print(MazeGenerator.PATH + " ");

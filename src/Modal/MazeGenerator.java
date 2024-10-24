@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
+/**
+ * MazeGenerator class is responsible for building the maze. This class uses the Depth first Search to build the maze.
+ * In order to make the gameplay fun, this class adds cycles in the maze so that there can be multiple paths to
+ * reach source from any destination. generateMaze() can be used to build a game.
+ */
 //Got idea from chatgpt about the mazeGeneration algorithm but implemented by my own.
 public class MazeGenerator {
     private static char[][] maze;

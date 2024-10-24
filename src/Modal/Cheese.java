@@ -1,5 +1,10 @@
 package Modal;
 
+/**
+ * Cheese class manages the location of cheese and is responsible for placing the cheese at a valid random location.
+ * Cheese class also stores the count of cheeseCollected by the mouse which help in the decision making for winning or
+ * losing a game.
+ */
 public class Cheese {
     private int totalCheeseCollected;
     private char cheese;

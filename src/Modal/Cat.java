@@ -1,5 +1,9 @@
 package Modal;
 
+/**
+ * Cat class manages the location of cat and provides methods to get or set the cat location in every move.
+ * Cat class is responsible for moving the cat randomly by checking the location validity.
+ */
 public class Cat {
     private char cat;
     private int catLocationRow;
